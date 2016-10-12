@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aggie Island</title>
+    
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<!--feel free to embelish, but ensure you don't disrupt playability-->
+	<style>
+        body{
+			text-align:center;
+		}
+		img{
+			display: block;
+			margin: auto;
+		}
+	</style>
+</head>
+<body>
+    <h1 id="heading">Find the buried treasure!</h1>
+    
+    <img id="map" width=800 height=600 src="https://ruinexplorer.github.io/Pirate-Map-USU-Campus.png">
+    
+    <p id="distance">Click on the map to search for the Treasure!</p>
+    
+    <script>	
+
+    function Point() {
+    	function make() {
+    		this.x = 0;
+    		this.y = 0;
+    		this.setPos = function(x,y) {
+    			this.x = x; 
+    			this.y = y;
+    		}
+    	}
+    	return new make();
+    };
+
+    img = document.getElementById('map');
+
+    var setTreasurePos = function() {
+    	var tPos = Point();
+    	tPos.x = Math.floor((Math.random() * img.clientWidth));
+    	tPos.y = Math.floor((Math.random() * img.clientHeight));
+    	document.getElementById("distance").innerHTML = "Treasure Pos: " + tPos.x + ", " + tPos.y ;
+    	return tPos;
+    };
+
+    var tPos = setTreasurePos();
+    var count = 0;
+
+    var getPos = function(p) {
+
+    	var dis = getDistance(p);
+    	
+    	var per = 100 - Math.abs(Math.floor((1 - (dis / img.clientWidth))*100));
+
+    	return per;
+
+    }
+
+    var getDistance = function(p) {
+    	return (Math.sqrt(Math.pow((p.x - tPos.x), 2) + Math.pow((p.y - tPos.y), 2)));
+    }
+    var win = function() {
+
+    	alert("Winner:\n Clicks: " + count);
+
+    }
+
+    $(document).ready(function(){
+	    $('#map').click(function(event){
+
+	        var clickPos = Point();
+	        var p = $('img');
+
+	        clickPos.x =  event.pageX - p.offset().left;
+	      	clickPos.y = event.pageY - p.offset().top;  
+	      	count++;
+	      	var per = getPos(clickPos)
+
+	      	if(per <= 2) {
+	      		win();
+	      	}
+	      	else if(per <= 2.5){
+	      		document.getElementById("distance").innerHTML = "Boiling hot! ";
+	      	} 
+	      	else if(per <= 5){
+	      		document.getElementById("distance").innerHTML = "Really hot ";
+	      	}
+	      	else if(per <= 10){
+	      		document.getElementById("distance").innerHTML = "Hot ";
+	      	}
+	      	else if(per <= 20){
+	      		document.getElementById("distance").innerHTML = "Warm ";
+	      	}
+	      	else if(per <= 40){
+	      		document.getElementById("distance").innerHTML = "Cold ";
+	      	}
+	      	else if(per <= 80){
+	      		document.getElementById("distance").innerHTML = "Really cold ";
+	      	}
+	      	else {
+	      		document.getElementById("distance").innerHTML = "Freezing! ";
+	      	}
+
+	      	if(count >= 50) {
+	      		
+	      	}
+
+	    });
+    });
+
+
+
+    </script>
+
+</body>
+</html>
